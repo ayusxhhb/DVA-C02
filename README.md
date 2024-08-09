@@ -60,6 +60,9 @@
 # `Elastic Compute Cloud`
 
 It's just VMs with on-demand price and scalable compute capacity option.
+>You will be charged for the AMI, Instance Type, EBS Volume, Networking, IOs, Snapshots.
+
+**Creating KeyPair for ec2 does not cost anything*
 
 **Pricing Options** : 
 - *On-Demand Instance* : 
