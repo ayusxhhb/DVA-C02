@@ -35,6 +35,8 @@
 **It's very important to secure your root user**
 
 - `User` : Individual AWS user.
+    - 5000 IAM users limit per account.
+    - Any IAM user can only be member of 10 groups.
 
 - `Groups` : Collection of similar people with shared permissions & users will inherit permissions from the group.
 
@@ -49,6 +51,13 @@
     - Permission Policy : What can they do after assuming the role?
 
 - `Policies` : A policy is an JSON file in AWS that, when associated with an identity or resource, defines their permissions.
+    - Inline : Assign policy individually
+    - Managed : Assign different identities to single policy.
+
+- `ARN` : Amazon Resource Name
+    - arn:partition:service:region:account-id:resource-id
+    - arn:partition:service:region:account-id:resource-type:resource-id
+    - arn:partition:service:region:account-id:resource-type:resource-id
 
 #### Permission Priority
 >*Explicit Deny > Explicit Allow > Default(Implicit Deny)*
@@ -98,3 +107,88 @@ It's just VMs with on-demand price and scalable compute capacity option.
 | `shutting-down` | The instance is preparing to be terminated.                                                                                                                                                 | Not billed                                                        |
 | `terminated`    | The instance has been permanently deleted and cannot be started.                                                                                                                            | Not billed                                                        |
 
+# `Simple Storage Service`
+
+**S3 billing factors :**
+- Amount of data(in GiB) stored.
+- No. of data retrieval options that you execute(Ex: GET, POST etc).
+- Data Transfer modes and regions.
+- Type of Storage Management and Analytics tool that you choose to adopt.
+- Replication.
+- No. of transition from diff classes.
+- Amount of data processed by S3 Object Lambda.
+- What region or AZ you choose to run your workload in.
+
+>*Get 5GB s3 storage if free tier eligible*
+
+# `CloudFormation`
+
+Provisions resources based on the template you provide.
+
+*JSON & YAML are used to create CloudFormation templates.*
+
+> Resource is the mandatory field in the template.
+
+**Template ex :**
+```yaml
+AWSTemplateFormatVersion: "version date"
+
+Description:
+    String(Free Text)
+Metadata:
+    template metadata
+Parameters:
+    set of parameters
+Mappings:
+    set of mappings
+Conditions:
+    set of conditions
+Transform:
+    set of transforms
+Resources:
+    set of resources
+Outputs:
+    set of outputs
+```
+
+A stack is a collection of AWS resources that you create and manage as a single unit using a CloudFormation template.
+
+***when you upload a yaml template file then it creates a new s3 bucket and stores the template in the cloud**
+
+# `CloudWatch`
+
+Amazon CloudWatch is basically a metrics repository. 
+
+An AWS service puts metrics into the repository, and you retrieve statistics based on those metrics. 
+
+If you put your own custom metrics into the repository, you can retrieve statistics on these metrics as well.
+
+---
+**High Availability :** Minimize any outages
+
+**Fault Tolerance :** Operate through faults
+
+**Disaster Recovery :** Used when HA & FT don't work
+
+---
+# `Domain Name Server`
+
+DNS Client : your laptop, phone, tablet etc.
+
+Resolver : software on your device, or a server which queries DNS on your behalf
+
+Zone : A part of DNS Database 
+
+Zonefile : physical database for a zone 
+
+Nameserver : where zonefiles are located 
+
+Root Hints : config points at the root servers IPs and addresses
+
+Root Server : hosts the DNS root zone 
+
+Root Zone : points at TLD authoritative servers
+
+gTLD : generic top level domain (.com .org)
+
+ccTLD : country-code top level domain (.au .in)
