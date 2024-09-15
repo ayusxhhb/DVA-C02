@@ -155,20 +155,6 @@ Classic Ports:
 - _Dedicated Instances_ : no other customers will share your hardware.
 - _Capacity Reservations_ : reserve capacity in a specific AZ for any duration
 
-**Price Comparison** :
-Example – m4.large – us-east-1
-| Price Type | Price(per hour) |
-| -------------------------------------- | ------------------- |
-| On-Demand | $ 0.10 |
-| Spot-Instance (Spot Price) | $ 0.10 |
-| Reserved Instance (1 Year) | $ 0.10 |
-| Reserved Instance (3 Year) | $ 0.10 |
-| EC2-Savings Plan (1 Year) | $ 0.10 |
-| Reserved Convertible Instance (1 Year) | $ 0.10 |
-| Dedicated Host | $ 0.10 |
-| Dedicated Host Reservation | $ 0.10 |
-| Capacity Reservation | $ 0.10 |
-
 ### Instance States :
 
 | Instance state  | Description                                                                                                                                                                                 | Billing                                                           |
@@ -245,7 +231,7 @@ An Amazon Machine Image (AMI) is an image that provides the software that is req
     - io1
     - io2
     - EBS Multi-Attach feature -
-        - Can attach the same EBS volume to multiple EC2 instances in the same AZ
+        - Can attach the same EBS volume to multiple EC2 instances in the *same AZ*
         - Each instance has full read & write permissions to the high-performance volume
         - Use case:
             - Achieve higher application availability in clustered Linux applications (ex: Teradata)
@@ -255,3 +241,38 @@ An Amazon Machine Image (AMI) is an image that provides the software that is req
 - **Hard Disk Drives (HDD)** : Cannot be a boot volume, 125 GiB to 16 TiB.
     - Throughput Optimized HDD (st1) : Used for Big Data, Data Warehouses, Log Processing.
     - Cold HDD (sc1) : Used for data that is infrequently accessed and Scenarios where lowest cost is important.
+
+### Amazon EFS(Elastic File System) 
+- It's a managed NFS (network file system) that can be mounted on many EC2
+- EFS works with EC2 instances in *multi-AZ*
+- Highly available, scalable, expensive, pay per use
+- Use cases: content management, web serving, data sharing, Wordpress
+- Uses NFSv4.1 protocol
+- Uses security group to control access to EFS
+- Compatible with Linux based AMI (not Windows)
+- Encryption at rest using KMS
+- POSIX file system (~Linux) that has a standard file API
+- File system scales automatically, pay-per-use, no capacity planning!
+- **EFS – Performance Classes**:
+    - EFS Scale : 
+        - 1000s of concurrent NFS clients, 10 GB+ /s throughput
+        - Grow to Petabyte-scale network file system, automatically
+    - Performance Mode (set at EFS creation time) : 
+        - General Purpose (default) – latency-sensitive use cases (web server, CMS, etc…)
+        - Max I/O – higher latency, throughput, highly parallel (big data, media processing)
+    - Throughput Mode : 
+        - Bursting – 1 TB = 50MiB/s + burst of up to 100MiB/s
+        - Provisioned – set your throughput regardless of storage size, ex: 1 GiB/s for 1 TB storage
+        - Elastic – automatically scales throughput up or down based on your workloads
+            - Up to 3GiB/s for reads and 1GiB/s for writes
+            - Used for unpredictable workloads
+- **EFS – Storage Classes**: 
+    - Storage Tiers (lifecycle management feature – move file after N days) : 
+        - Standard: for frequently accessed files
+        - Infrequent access (EFS-IA): cost to retrieve files, lower price to store. 
+        - Archive: rarely accessed data (few times each year), 50% cheaper
+        - Implement lifecycle policies to move files between storage tiers
+    - Availability and durability :
+        - Standard: Multi-AZ, great for prod
+        - One Zone: One AZ, great for dev, backup enabled by default, compatible with IA (EFS One Zone-IA)
+
