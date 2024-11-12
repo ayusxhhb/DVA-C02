@@ -276,3 +276,67 @@ An Amazon Machine Image (AMI) is an image that provides the software that is req
         - Standard: Multi-AZ, great for prod
         - One Zone: One AZ, great for dev, backup enabled by default, compatible with IA (EFS One Zone-IA)
 
+Vertical Scaling : Increase instance size
+
+Horizontal Scaling : Increase number of instances
+
+High Availability : Running instance for the same app across multi AZ
+
+## Elastic Load Balancer
+Load Balances are servers that forward traffic to multiple
+servers (e.g., EC2 instances) downstream
+- Spread load across multiple downstream instances
+- Expose a single point of access (DNS) to your application
+- Seamlessly handle failures of downstream instances
+- Do regular health checks to your instances
+- Provide SSL termination (HTTPS) for your websites
+- Enforce stickiness with cookies
+- High availability across zones
+- Separate public traffic from private traffic
+- Health checks are done on the EC2 instances to know if instances it forwards traffic to are available to reply to requests
+- The health check is done on a port and a route (/health is common) If the response is not 200 (OK), then the instance is unhealthy
+
+### Types of load balancers : 
+- **Classic Load Balancer(depricated)**
+    - for HTTP, HTTPS, TCP, SSL (secure TCP)
+- **Application Load Balancer**
+    - for HTTP, HTTPS, WebSocket
+    - works on layers 7
+    - used for both VMs and containers
+    - support redirect http to https
+    - Routing
+        - routes based on path in URL
+        - routes based on hostname in URL
+        - routes based on Query String, Headers
+    - has a port matching feature to redirect to a dynamic port in ECS
+    - can use 1 ALB for multiple applications
+    - The application servers don’t see the IP of the client directly
+        - The true IP of the client is inserted in the header X-Forwarded-For
+        - We can also get Port (X-Forwarded-Port) and proto (X-Forwarded-Proto)
+    - Target Groups
+        - EC2 instances (can be managed by an Auto Scaling Group) – HTTP
+        - ECS tasks (managed by ECS itself) – HTTP
+        - Lambda functions – HTTP request is translated into a JSON event
+        - IP Addresses – must be private IPs
+- **Network Load Balancer**
+    - for TCP, TLS (secure TCP), UDP
+    - works on layer 4
+    - Forward TCP & UDP traffic to your instances
+    - ideal for Handling millions of request per seconds
+    - NLB has one static IP per AZ, and supports assigning Elastic IP(helpful for whitelisting specific IP)
+    - Target Groups
+        - EC2 instances
+        - IP Addresses – must be private IPs
+        - Application Load Balancer
+- **Gateway Load Balancer**
+    - Operates at layer 3 (Network layer) – IP Protocol
+    - it basically acts like a middle b/w your application and you that way you can perform certain action to the user before user get to the ALB
+      - example : Firewalls, Intrusion detection and prevention systems, deep packet inspection systems, payload manipulation
+    - basically used for security purposes
+    - Uses the GENEVE protocol on port 6081
+    - Target Groups
+        - EC2 instances
+        - IP Addresses – must be private IPs
+> Load balancers can also be setup to only allow traffic that passes through the load balancer
+
+- **Sticky Sessions**: 
